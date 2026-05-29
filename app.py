@@ -57,10 +57,9 @@ h2, h3 {
 .stSelectbox div[data-baseweb="select"] {
     background-color: white;
     border-radius: 10px;
-    color: black !important;
 }
 
-/* TEXT DI DALAM SELECTBOX */
+/* TEXT INSIDE SELECTBOX */
 .stSelectbox div[data-baseweb="select"] span {
     color: #0F172A !important;
     font-weight: 600 !important;
@@ -106,22 +105,17 @@ div.stAlert {
     border-radius: 16px !important;
 }
 
-/* JUDUL METRIC */
+/* METRIC TITLE */
 [data-testid="metric-container"] label {
     color: #1E3A8A !important;
     font-weight: 800 !important;
 }
 
-/* ANGKA/TEXT METRIC */
+/* METRIC VALUE */
 [data-testid="stMetricValue"] {
     color: #0F172A !important;
     font-size: 30px !important;
     font-weight: 800 !important;
-}
-
-/* METHOD / DELTA */
-[data-testid="stMetricDelta"] {
-    color: #2563EB !important;
 }
 
 /* FILE UPLOADER */
@@ -130,18 +124,6 @@ div.stAlert {
     border-radius: 16px;
     padding: 15px;
     border: 2px dashed #93C5FD;
-}
-
-/* FILE UPLOADER TEXT */
-[data-testid="stFileUploader"] small,
-[data-testid="stFileUploader"] span,
-[data-testid="stFileUploader"] label {
-    color: #0F172A !important;
-}
-
-/* INFO BOX */
-[data-testid="stAlert"] {
-    color: #0F172A !important;
 }
 
 /* PLOT TEXT */
@@ -196,31 +178,16 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
 
-# ==================================================
-# LOAD DATASET
-# ==================================================
+    # ==================================================
+    # LOAD DATASET
+    # ==================================================
 
-try:
+    try:
 
-    file_name = uploaded_file.name
+        file_name = uploaded_file.name
 
-    # =========================
-    # CSV FILE
-    # =========================
-    if file_name.endswith(".csv"):
-
-        try:
-
-            uploaded_file.seek(0)
-
-            df = pd.read_csv(
-                uploaded_file,
-                sep=None,
-                engine="python",
-                encoding="utf-8"
-            )
-
-        except:
+        # CSV
+        if file_name.endswith(".csv"):
 
             try:
 
@@ -230,35 +197,46 @@ try:
                     uploaded_file,
                     sep=None,
                     engine="python",
-                    encoding="latin1"
+                    encoding="utf-8"
                 )
 
             except:
 
-                uploaded_file.seek(0)
+                try:
 
-                df = pd.read_csv(
-                    uploaded_file,
-                    sep=None,
-                    engine="python",
-                    encoding="ISO-8859-1"
-                )
+                    uploaded_file.seek(0)
 
-    # =========================
-    # EXCEL FILE
-    # =========================
-    elif file_name.endswith(".xlsx"):
+                    df = pd.read_csv(
+                        uploaded_file,
+                        sep=None,
+                        engine="python",
+                        encoding="latin1"
+                    )
 
-        df = pd.read_excel(uploaded_file)
+                except:
 
-    st.success("⊹ Dataset Loaded Successfully ✨")
+                    uploaded_file.seek(0)
 
-except Exception as e:
+                    df = pd.read_csv(
+                        uploaded_file,
+                        sep=None,
+                        engine="python",
+                        encoding="ISO-8859-1"
+                    )
 
-    st.error(f"Error loading dataset: {e}")
-    
+        # EXCEL
+        elif file_name.endswith(".xlsx"):
+
+            df = pd.read_excel(uploaded_file)
+
+        st.success("⊹ Dataset Loaded Successfully ✨")
+
+    except Exception as e:
+
+        st.error(f"Error loading dataset: {e}")
+
     # ==================================================
-    # PREVIEW
+    # DATA PREVIEW
     # ==================================================
 
     st.subheader("✦ Dataset Preview")
@@ -309,7 +287,7 @@ except Exception as e:
     st.sidebar.subheader("✦ DSS Components")
 
     st.sidebar.write("⊹ Alternative : opsi keputusan")
-    st.sidebar.write("⊹ State of Nature : kondisi/variabel")
+    st.sidebar.write("⊹ State of Nature : kondisi")
     st.sidebar.write("⊹ Payoff : hasil keputusan")
     st.sidebar.write("⊹ Method : metode DSS")
 
@@ -454,18 +432,21 @@ except Exception as e:
         col1, col2, col3 = st.columns(3)
 
         with col1:
+
             st.metric(
                 "✦ Best Decision",
                 best_choice
             )
 
         with col2:
+
             st.metric(
                 "✦ Best Score",
                 f"{best_score:.2f}"
             )
 
         with col3:
+
             st.metric(
                 "✦ Method",
                 method
@@ -474,49 +455,49 @@ except Exception as e:
         # ==================================================
         # EXPLANATION
         # ==================================================
-        
+
         st.subheader("✦ Recommendation Insight")
-        
+
         if method == "Maximax":
-        
+
             explanation = f"""
-        ⊹ Berdasarkan metode Maximax, alternatif **{best_choice}** dipilih karena memiliki nilai payoff tertinggi dibandingkan alternatif lainnya.
-        
-        ⊹ Metode Maximax berfokus pada kemungkinan hasil paling menguntungkan (optimistic approach), sehingga alternatif dengan potensi keuntungan maksimum akan direkomendasikan.
-        
-        ⊹ Dari hasil perhitungan DSS, alternatif **{best_choice}** memperoleh skor sebesar **{best_score:.2f}**, yang menunjukkan performa terbaik pada kondisi tertentu dalam dataset.
-        """
-        
+⊹ Berdasarkan metode Maximax, alternatif **{best_choice}** dipilih karena memiliki nilai payoff tertinggi dibandingkan alternatif lainnya.
+
+⊹ Metode Maximax berfokus pada kemungkinan hasil paling menguntungkan (optimistic approach), sehingga alternatif dengan potensi keuntungan maksimum akan direkomendasikan.
+
+⊹ Dari hasil perhitungan DSS, alternatif **{best_choice}** memperoleh skor sebesar **{best_score:.2f}**, yang menunjukkan performa terbaik pada kondisi tertentu dalam dataset.
+"""
+
         elif method == "Maximin":
-        
+
             explanation = f"""
-        ⊹ Berdasarkan metode Maximin, alternatif **{best_choice}** dipilih karena memiliki nilai minimum terbaik dibanding alternatif lainnya.
-        
-        ⊹ Metode ini digunakan untuk pengambilan keputusan yang lebih aman (conservative approach), dengan mempertimbangkan kondisi terburuk dari setiap alternatif.
-        
-        ⊹ Hasil evaluasi menunjukkan bahwa alternatif **{best_choice}** memperoleh skor sebesar **{best_score:.2f}**, sehingga dianggap sebagai pilihan paling stabil dan minim risiko.
-        """
-        
+⊹ Berdasarkan metode Maximin, alternatif **{best_choice}** dipilih karena memiliki nilai minimum terbaik dibanding alternatif lainnya.
+
+⊹ Metode ini digunakan untuk pengambilan keputusan yang lebih aman (conservative approach), dengan mempertimbangkan kondisi terburuk dari setiap alternatif.
+
+⊹ Hasil evaluasi menunjukkan bahwa alternatif **{best_choice}** memperoleh skor sebesar **{best_score:.2f}**, sehingga dianggap sebagai pilihan paling stabil dan minim risiko.
+"""
+
         elif method == "Expected Value":
-        
+
             explanation = f"""
-        ⊹ Berdasarkan metode Expected Value, alternatif **{best_choice}** direkomendasikan karena menghasilkan nilai ekspektasi tertinggi.
-        
-        ⊹ Sistem menghitung rata-rata hasil berdasarkan probabilitas setiap state of nature yang telah dimasukkan pengguna.
-        
-        ⊹ Dari hasil analisis DSS, alternatif **{best_choice}** memperoleh expected value sebesar **{best_score:.2f}**, sehingga dianggap paling optimal secara keseluruhan.
-        """
-        
+⊹ Berdasarkan metode Expected Value, alternatif **{best_choice}** direkomendasikan karena menghasilkan nilai ekspektasi tertinggi.
+
+⊹ Sistem menghitung rata-rata hasil berdasarkan probabilitas setiap state of nature yang telah dimasukkan pengguna.
+
+⊹ Dari hasil analisis DSS, alternatif **{best_choice}** memperoleh expected value sebesar **{best_score:.2f}**, sehingga dianggap paling optimal secara keseluruhan.
+"""
+
         elif method == "Minimax Regret":
-        
+
             explanation = f"""
-        ⊹ Berdasarkan metode Minimax Regret, alternatif **{best_choice}** dipilih karena memiliki nilai regret paling kecil dibandingkan alternatif lainnya.
-        
-        ⊹ Metode ini bertujuan meminimalkan potensi penyesalan (regret) akibat pengambilan keputusan yang kurang optimal pada berbagai kondisi.
-        
-        ⊹ Hasil analisis menunjukkan bahwa alternatif **{best_choice}** memiliki nilai regret sebesar **{best_score:.2f}**, sehingga menjadi pilihan yang paling aman untuk meminimalkan kerugian keputusan.
-        """
-        
+⊹ Berdasarkan metode Minimax Regret, alternatif **{best_choice}** dipilih karena memiliki nilai regret paling kecil dibandingkan alternatif lainnya.
+
+⊹ Metode ini bertujuan meminimalkan potensi penyesalan (regret) akibat pengambilan keputusan yang kurang optimal pada berbagai kondisi.
+
+⊹ Hasil analisis menunjukkan bahwa alternatif **{best_choice}** memiliki nilai regret sebesar **{best_score:.2f}**, sehingga menjadi pilihan yang paling aman untuk meminimalkan kerugian keputusan.
+"""
+
         st.info(explanation)
 
         # ==================================================
@@ -533,12 +514,13 @@ except Exception as e:
 
         st.subheader("✦ DSS Visualization")
 
-        fig = px.histogram(
+        fig = px.bar(
             ranking_df,
-            x="Score",
-            nbins=20,
+            x="Alternative",
+            y="Score",
+            color="Score",
             template="plotly_white",
-            title=f"{method} Score Distribution"
+            title=f"{method} Result"
         )
 
         fig.update_layout(
@@ -554,10 +536,7 @@ except Exception as e:
             title_font=dict(
                 size=22,
                 color="#1E3A8A"
-            ),
-
-            xaxis_title="Score",
-            yaxis_title="Frequency"
+            )
         )
 
         st.plotly_chart(
@@ -568,5 +547,5 @@ except Exception as e:
 else:
 
     st.info(
-        "⊹ Upload CSV dataset to start DSS analysis ✨"
+        "⊹ Upload CSV / Excel dataset to start DSS analysis ✨"
     )

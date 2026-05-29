@@ -60,6 +60,12 @@ h2, h3 {
     color: black !important;
 }
 
+/* TEXT DI DALAM SELECTBOX */
+.stSelectbox div[data-baseweb="select"] span {
+    color: #0F172A !important;
+    font-weight: 600 !important;
+}
+
 /* MULTISELECT */
 .stMultiSelect div[data-baseweb="select"] {
     background-color: white !important;

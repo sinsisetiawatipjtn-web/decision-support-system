@@ -186,8 +186,8 @@ st.write("---")
 # ==================================================
 
 uploaded_file = st.file_uploader(
-    "⊹ Upload CSV Dataset",
-    type=["csv"]
+    "⊹ Upload Dataset",
+    type=["csv", "xlsx"]
 )
 
 # ==================================================
@@ -199,19 +199,15 @@ if uploaded_file is not None:
     # ==================================================
     # LOAD DATASET
     # ==================================================
-
+    
     try:
 
-        uploaded_file.seek(0)
+    file_name = uploaded_file.name
 
-        df = pd.read_csv(
-            uploaded_file,
-            sep=None,
-            engine="python",
-            encoding="utf-8"
-        )
-
-    except:
+    # =========================
+    # CSV FILE
+    # =========================
+    if file_name.endswith(".csv"):
 
         try:
 
@@ -221,21 +217,45 @@ if uploaded_file is not None:
                 uploaded_file,
                 sep=None,
                 engine="python",
-                encoding="latin1"
+                encoding="utf-8"
             )
 
         except:
 
-            uploaded_file.seek(0)
+            try:
 
-            df = pd.read_csv(
-                uploaded_file,
-                sep=None,
-                engine="python",
-                encoding="ISO-8859-1"
-            )
+                uploaded_file.seek(0)
+
+                df = pd.read_csv(
+                    uploaded_file,
+                    sep=None,
+                    engine="python",
+                    encoding="latin1"
+                )
+
+            except:
+
+                uploaded_file.seek(0)
+
+                df = pd.read_csv(
+                    uploaded_file,
+                    sep=None,
+                    engine="python",
+                    encoding="ISO-8859-1"
+                )
+
+    # =========================
+    # EXCEL FILE
+    # =========================
+    elif file_name.endswith(".xlsx"):
+
+        df = pd.read_excel(uploaded_file)
 
     st.success("⊹ Dataset Loaded Successfully ✨")
+
+    except Exception as e:
+
+    st.error(f"Error loading dataset: {e}")
 
     # ==================================================
     # PREVIEW

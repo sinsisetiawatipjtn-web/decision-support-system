@@ -196,11 +196,11 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
 
-    # ==================================================
-    # LOAD DATASET
-    # ==================================================
-    
-    try:
+# ==================================================
+# LOAD DATASET
+# ==================================================
+
+try:
 
     file_name = uploaded_file.name
 
@@ -253,10 +253,10 @@ if uploaded_file is not None:
 
     st.success("⊹ Dataset Loaded Successfully ✨")
 
-    except Exception as e:
+except Exception as e:
 
     st.error(f"Error loading dataset: {e}")
-
+    
     # ==================================================
     # PREVIEW
     # ==================================================

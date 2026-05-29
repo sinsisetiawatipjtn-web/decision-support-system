@@ -474,48 +474,50 @@ if uploaded_file is not None:
         # ==================================================
         # EXPLANATION
         # ==================================================
-
+        
         st.subheader("✦ Recommendation Insight")
-
+        
         if method == "Maximax":
-
+        
             explanation = f"""
-            ⊹ {best_choice} dipilih karena memiliki payoff maksimum tertinggi.
-            """
-
+        ⊹ Berdasarkan metode Maximax, alternatif **{best_choice}** dipilih karena memiliki nilai payoff tertinggi dibandingkan alternatif lainnya.
+        
+        ⊹ Metode Maximax berfokus pada kemungkinan hasil paling menguntungkan (optimistic approach), sehingga alternatif dengan potensi keuntungan maksimum akan direkomendasikan.
+        
+        ⊹ Dari hasil perhitungan DSS, alternatif **{best_choice}** memperoleh skor sebesar **{best_score:.2f}**, yang menunjukkan performa terbaik pada kondisi tertentu dalam dataset.
+        """
+        
         elif method == "Maximin":
-
+        
             explanation = f"""
-            ⊹ {best_choice} dipilih karena memiliki nilai minimum terbaik.
-            """
-
+        ⊹ Berdasarkan metode Maximin, alternatif **{best_choice}** dipilih karena memiliki nilai minimum terbaik dibanding alternatif lainnya.
+        
+        ⊹ Metode ini digunakan untuk pengambilan keputusan yang lebih aman (conservative approach), dengan mempertimbangkan kondisi terburuk dari setiap alternatif.
+        
+        ⊹ Hasil evaluasi menunjukkan bahwa alternatif **{best_choice}** memperoleh skor sebesar **{best_score:.2f}**, sehingga dianggap sebagai pilihan paling stabil dan minim risiko.
+        """
+        
         elif method == "Expected Value":
-
+        
             explanation = f"""
-            ⊹ {best_choice} dipilih karena memiliki expected value tertinggi.
-            """
-
+        ⊹ Berdasarkan metode Expected Value, alternatif **{best_choice}** direkomendasikan karena menghasilkan nilai ekspektasi tertinggi.
+        
+        ⊹ Sistem menghitung rata-rata hasil berdasarkan probabilitas setiap state of nature yang telah dimasukkan pengguna.
+        
+        ⊹ Dari hasil analisis DSS, alternatif **{best_choice}** memperoleh expected value sebesar **{best_score:.2f}**, sehingga dianggap paling optimal secara keseluruhan.
+        """
+        
         elif method == "Minimax Regret":
-
+        
             explanation = f"""
-            ⊹ {best_choice} dipilih karena memiliki regret minimum.
-            """
-
-        st.info(f"""
-
-        ⊹ Berdasarkan analisis menggunakan metode **{method}**, 
-        alternatif **{best_choice}** direkomendasikan sebagai pilihan terbaik 
-        karena menghasilkan nilai payoff paling optimal dibandingkan alternatif lainnya.
-
-        ⊹ Sistem melakukan evaluasi terhadap seluruh state of nature 
-        yang dipilih pada dataset dan menghitung performa setiap alternatif 
-        berdasarkan metode pengambilan keputusan DSS.
-
-        ⊹ Hasil akhir menunjukkan bahwa **{best_choice}** memiliki 
-        skor sebesar **{best_score:.2f}**, sehingga alternatif ini dianggap 
-        paling sesuai untuk dijadikan rekomendasi keputusan.
-
-        """)
+        ⊹ Berdasarkan metode Minimax Regret, alternatif **{best_choice}** dipilih karena memiliki nilai regret paling kecil dibandingkan alternatif lainnya.
+        
+        ⊹ Metode ini bertujuan meminimalkan potensi penyesalan (regret) akibat pengambilan keputusan yang kurang optimal pada berbagai kondisi.
+        
+        ⊹ Hasil analisis menunjukkan bahwa alternatif **{best_choice}** memiliki nilai regret sebesar **{best_score:.2f}**, sehingga menjadi pilihan yang paling aman untuk meminimalkan kerugian keputusan.
+        """
+        
+        st.info(explanation)
 
         # ==================================================
         # RANKING RESULT
